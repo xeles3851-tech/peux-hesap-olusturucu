@@ -1,322 +1,52 @@
-<?php
-header('Content-Type: text/html; charset=UTF-8');
-?>
 <!DOCTYPE html>
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Peuxhell</title>
-  <!-- Tailwind CSS CDN -->
+  <title>Peux Hesap Oluşturucu - DEBUG</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- GSAP CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <style>
-    body {
-      background: linear-gradient(135deg, #1a1a2e, #16213e);
-      min-height: 100vh;
-      overflow-x: hidden;
-      position: relative;
-      color: #e0e0e0;
-      font-family: 'Inter', sans-serif;
-    }
-    .background-shapes {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      overflow: hidden;
-    }
-    .shape {
-      position: absolute;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 50%;
-      filter: blur(20px);
-    }
-    .glow-button {
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
-    .glow-button::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 300%;
-      height: 300%;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent);
-      transform: translate(-50%, -50%) scale(0);
-      transition: transform 0.5s ease;
-    }
-    .glow-button:hover::before {
-      transform: translate(-50%, -50%) scale(1);
-    }
-    .glow-button:hover {
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-    }
-    .result-table {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid #374151;
-    }
-    .result-table th,
-    .result-table td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid #374151;
-    }
-    .result-table th {
-      background: #1f2937;
-      color: #60a5fa;
-      font-weight: 600;
-    }
-    .result-table tr:hover {
-      background: rgba(59, 130, 246, 0.1);
-    }
-    .copy-btn {
-      transition: background-color 0.3s ease;
-    }
-    .copy-btn:hover {
-      background-color: #2563eb;
-    }
+    body { background: linear-gradient(135deg, #1a1a2e, #16213e); min-height: 100vh; overflow-x: hidden; color: #e0e0e0; font-family: 'Inter', sans-serif; }
+    .background-shapes { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; overflow: hidden; }
+    .shape { position: absolute; background: rgba(255,255,255,0.05); border-radius: 50%; filter: blur(20px); }
+    .glow-button { position: relative; overflow: hidden; transition: all 0.3s ease; }
+    .glow-button::before { content: ''; position: absolute; top: 50%; left: 50%; width: 300%; height: 300%; background: radial-gradient(circle, rgba(255,255,255,0.3), transparent); transform: translate(-50%, -50%) scale(0); transition: transform 0.5s ease; }
+    .glow-button:hover::before { transform: translate(-50%, -50%) scale(1); }
+    .glow-button:hover { box-shadow: 0 0 25px rgba(255,255,255,0.6); }
   </style>
 </head>
 <body>
-  <!-- Hareketli Arka Plan -->
   <div class="background-shapes">
-    <div class="shape" style="width: 200px; height: 200px; top: 10%; left: 20%;"></div>
-    <div class="shape" style="width: 150px; height: 150px; top: 60%; left: 70%;"></div>
-    <div class="shape" style="width: 100px; height: 100px; top: 30%; left: 50%;"></div>
+    <div class="shape" style="width:200px;height:200px;top:10%;left:20%;"></div>
+    <div class="shape" style="width:150px;height:150px;top:60%;left:70%;"></div>
+    <div class="shape" style="width:100px;height:100px;top:30%;left:50%;"></div>
   </div>
 
-  <!-- Ana İçerik -->
   <div class="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
-    <h1 class="text-4xl font-bold mb-8 text-white animate-pulse">Peux Hesap Oluşturucu</h1>
-    
+    <h1 class="text-4xl font-bold mb-8 text-white animate-pulse">Peux Hesap Oluşturucu - DEBUG</h1>
+
     <div class="w-full max-w-md bg-gray-900 bg-opacity-50 p-8 rounded-lg shadow-lg backdrop-blur-md">
       <div class="mb-6">
         <label for="accountCount" class="block text-sm font-medium mb-2">Kaç Adet Hesap Oluşturulacak?</label>
-        <input
-          type="number"
-          id="accountCount"
-          min="1"
-          class="w-full px-4 py-2 bg-gray-800 text-white border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Hesap sayısı girin"
-        />
+        <input type="number" id="accountCount" min="1" value="3" class="w-full px-4 py-2 bg-gray-800 text-white border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
       </div>
-      <button id="startButton" class="glow-button w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700">
-        Başlat
-      </button>
-
-      <!-- DURDUR BUTONU (tam altına eklendi) -->
-      <button id="stopButton" 
-              class="glow-button w-full px-4 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 mt-3 hidden">
-        ⏹️ Durdur
-      </button>
+      <button id="startButton" class="glow-button w-full px-4 py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 text-lg">🚀 Hesapları Oluştur (DEBUG)</button>
     </div>
 
-    <!-- Sonuçlar -->
-    <div id="results" class="w-full max-w-4xl mt-12">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-semibold text-white">Oluşturulan Hesaplar</h2>
-        
-        <button id="downloadBtn"
-                class="glow-button px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-md flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v-4m0 0l4 4m-4-4l4-4m12 0v4m0 0l-4-4m4 4l-4 4" />
-          </svg>
-          Tüm Sonuçları TXT Olarak İndir
-        </button>
-      </div>
-
-      <div class="overflow-x-auto">
-        <table id="resultTable" class="result-table w-full text-sm">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Kullanıcı Adı</th>
-              <th>Şifre</th>
-              <th>Doğum Tarihi</th>
-              <th>E-posta</th>
-              <th>Doğrulayıcı</th>
-            </tr>
-          </thead>
-          <tbody id="resultList"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <div id="status" class="mt-4 text-center text-lg"></div>
+    <div id="status" class="mt-4 text-center text-lg font-medium"></div>
   </div>
 
   <script>
-    // GSAP Arka Plan Animasyonu
-    gsap.to(".shape", {
-      x: () => Math.random() * 200 - 100,
-      y: () => Math.random() * 200 - 100,
-      scale: () => Math.random() * 0.5 + 0.75,
-      rotation: 360,
-      repeat: -1,
-      yoyo: true,
-      duration: () => Math.random() * 3 + 2,
-      ease: "sine.inOut",
-      stagger: 0.5
-    });
+    console.log("✅ Script yüklendi - DEBUG MOD AKTİF");
+    const API_URL = 'https://peux-backend-production.up.railway.app';
+    console.log("API_URL:", API_URL);
 
-    const API_URL = 'http://localhost:8000';
     const startButton = document.getElementById('startButton');
-    const stopButton = document.getElementById('stopButton');
-    const accountCountInput = document.getElementById('accountCount');
-    const statusDiv = document.getElementById('status');
-    const resultList = document.getElementById('resultList');
-    const downloadBtn = document.getElementById('downloadBtn');
-
-    let accountCounter = 0;
-    let accounts = [];
-    let isStopped = false;
-
-    // İndirme butonu
-    downloadBtn.addEventListener('click', () => {
-      if (accounts.length === 0) {
-        alert('Henüz hiç hesap oluşturulmadı!');
-        return;
-      }
-      let txtContent = accounts.map(acc => 
-        `${acc.username}:${acc.password}`
-      ).join('\n');
-      const blob = new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `peux_hesaplar_${new Date().toISOString().slice(0,10)}.txt`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      const originalText = downloadBtn.innerHTML;
-      downloadBtn.innerHTML = '✅ İndirildi!';
-      setTimeout(() => {
-        downloadBtn.innerHTML = originalText;
-      }, 2500);
+    startButton.addEventListener('click', () => {
+      console.log("🚀 Butona basıldı!");
+      alert("Buton çalıştı! Console'a bak.");
     });
-
-    // DURDUR butonu
-    stopButton.addEventListener('click', () => {
-      isStopped = true;
-      statusDiv.textContent = '⏹️ Durduruluyor... (mevcut hesap bitene kadar bekliyor)';
-      statusDiv.classList.add('text-yellow-400');
-    });
-
-    startButton.addEventListener('click', async () => {
-      const count = parseInt(accountCountInput.value);
-      if (isNaN(count) || count < 1) {
-        alert('Lütfen geçerli bir sayı girin!');
-        return;
-      }
-
-      isStopped = false;
-      startButton.disabled = true;
-      stopButton.classList.remove('hidden');
-      statusDiv.textContent = 'Hesaplar oluşturuluyor...';
-      statusDiv.classList.remove('text-red-500', 'text-yellow-400');
-      resultList.innerHTML = '';
-      accountCounter = 0;
-      accounts = [];
-
-      try {
-        for (let i = 0; i < count; i++) {
-          if (isStopped) {
-            statusDiv.textContent = '⏹️ Kullanıcı tarafından durduruldu!';
-            statusDiv.classList.add('text-yellow-400');
-            break;
-          }
-          await createAndPollAccount();
-        }
-        if (!isStopped) {
-          statusDiv.textContent = `✅ ${count} hesap başarıyla oluşturuldu!`;
-        }
-      } catch (error) {
-        statusDiv.textContent = `Hata: ${error.message}`;
-        statusDiv.classList.add('text-red-500');
-      } finally {
-        startButton.disabled = false;
-        stopButton.classList.add('hidden');
-      }
-    });
-
-    async function createAndPollAccount() {
-      try {
-        const response = await fetch(`${API_URL}/create-account`, {
-          method: 'GET',
-          headers: { 'Accept': 'application/json' }
-        });
-        if (!response.ok) throw new Error(`Başlatılamadı: ${response.status}`);
-
-        const data = await response.json();
-        const taskId = data.task_id;
-        await pollTaskStatus(taskId);
-      } catch (error) {
-        throw error;
-      }
-    }
-
-    async function pollTaskStatus(taskId) {
-      while (true) {
-        if (isStopped) return;
-
-        const response = await fetch(`${API_URL}/task/${taskId}`, {
-          method: 'GET',
-          headers: { 'Accept': 'application/json' }
-        });
-
-        if (response.status === 200) {
-          const data = await response.json();
-          if (data.status === 'success' && data.account_info) {
-            addAccountToTable(data.account_info);
-            return;
-          } else if (data.status === 'failed') {
-            throw new Error(data.error || 'Bilinmeyen hata');
-          }
-        } else if (response.status === 404) {
-          await new Promise(r => setTimeout(r, 2000));
-          continue;
-        }
-        await new Promise(r => setTimeout(r, 1500));
-      }
-    }
-
-    function addAccountToTable(account) {
-      accountCounter++;
-      accounts.push(account);
-
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${accountCounter}</td>
-        <td>${account.username || '-'}</td>
-        <td>${account.password || '-'} 
-          <button class="copy-btn ml-2 px-2 py-1 text-xs bg-blue-600 text-white rounded" data-copy="${account.password || ''}">Kopyala</button>
-        </td>
-        <td>${account.dob || '-'}</td>
-        <td>${account.email || '-'}</td>
-        <td>Fony</td>
-      `;
-      resultList.appendChild(row);
-
-      gsap.from(row, { opacity: 0, y: 30, duration: 0.6, delay: accountCounter * 0.1, ease: 'power2.out' });
-
-      row.querySelector('.copy-btn').addEventListener('click', function() {
-        navigator.clipboard.writeText(this.getAttribute('data-copy')).then(() => {
-          this.textContent = 'Kopyalandı!';
-          setTimeout(() => this.textContent = 'Kopyala', 2000);
-        });
-      });
-    }
   </script>
 </body>
 </html>
